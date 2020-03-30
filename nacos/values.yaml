@@ -3,13 +3,14 @@
 # Declare variables to be passed into your templates.
 
 global:
-  mode: quickstart
-  #mode: standalone
+  # mode: quickstart
+  mode: standalone
   #mode: cluster
   #storageClass:
 
-############################mysql###########################
-mysql:
+############################ mysql ###########################
+# 覆盖子Chart配置要名称与子Chart匹配
+mysql: 
   annotations: {}
   resources: {}
   nodeSelector: {}
@@ -18,24 +19,23 @@ mysql:
   image:
     pullPolicy: IfNotPresent
     repository: nacos/nacos-mysql
-    tag: 8.0.16
+    tag: 5.7
   rootPassword: scott-wong
   database: nacos_devtest
   user: nacos
   password: nacos
   persistence:
-    enabled: false
+    enabled: true
     # existingClaim:
     claim:
       name: nacos-mysql-data
-      spec:
-        accessModes:
-          - ReadWriteOnce
+      accessModes:
+        - ReadWriteOnce
       size: 5Gi
 
-############################mysql###########################
+############################ mysql ###########################
 
-############################nacos###########################
+############################ nacos ###########################
 replicaCount: 1
 
 image:
@@ -43,6 +43,7 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
+# TODO health check
 health:
   enabled: false
 

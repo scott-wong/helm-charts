@@ -13,8 +13,7 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "nacos.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    component: nacos
 {{- end }}
 ---
 apiVersion: v1
@@ -22,7 +21,7 @@ kind: Service
 metadata:
   name: nacos-cs
   labels: 
-{{- toYaml .Values.service.labels | nindent 4 }}
+    component: nacos
   annotations: 
 {{- toYaml .Values.service.annotations | nindent 4 }}
 spec:
@@ -36,5 +35,4 @@ spec:
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
   selector:
-    app.kubernetes.io/name: {{ include "nacos.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    component: nacos

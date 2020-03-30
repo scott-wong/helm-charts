@@ -8,9 +8,8 @@ This project is based on the Helm Chart packaged by [nacos-k8s](https://github.c
 
 ## Prerequisites
 
- - Kubernetes 1.10+ 
- - Helm v3 
- - PV provisioner support in the underlying infrastructure
+ - Kubernetes 1.16+ 
+ - Helm v2 v3 
 
 ## Installing the Chart
 
@@ -117,18 +116,15 @@ The following table lists the configurable parameters of the Skywalking chart an
 
 
 ## Example
-![img](../images/nacos.png)
 #### quickstart mode(without mysql)
 ```console
 $ helm install `release name` ./ --set global.mode=quickstart
 ```
-![img](../images/quickstart.png)
 
 #### standalone mode(without pv)
 ```console
 $ helm install `release name` ./ --set global.mode=standalone
 ```
-![img](../images/standalone.png)
 
 
 > **Tip**: if the logs of nacos pod throws exception, you may need to delete the pod. Because mysql pod is not ready, nacos pod has been started.
@@ -137,13 +133,10 @@ $ helm install `release name` ./ --set global.mode=standalone
 ```console
 $ helm install `release name` ./ --set global.mode=cluster
 ```
-![img](../images/cluster1.png)
 
 ```console
 $ kubectl scale sts `release name`-nacos --replicas=3
 ```
-![img](../images/cluster2.png)
 
  * Use kubectl exec to get the cluster config of the Pods in the nacos StatefulSet after scale StatefulSets
  
-![img](../images/cluster3.png)

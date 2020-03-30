@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "nacos.fullname" . }}
+  labels: 
+    component: nacos
   annotations: 
   {{- toYaml .Values.annotations | indent 4 }}
 spec:
@@ -13,23 +15,25 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "nacos.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      component: nacos
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "nacos.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        component: nacos
+        release: {{ .Release.Name }}
     spec:
-{{- if eq .Values.global.mode "cluster" }}
       initContainers:
+        - name: check-mysql
+          image: busybox:1.31
+          command: ['sh', '-c', 'until nslookup {{ .Values.env.dbHost }}; do echo waiting for mysql; sleep 2; done; echo waiting for initing mysql data; sleep 45;']
+        {{- if eq .Values.global.mode "cluster" }}
         - name: peer-finder-plugin-install
           image: nacos/nacos-peer-finder-plugin:1.0
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /home/nacos/plugins/peer-finder
               name: plugindir
-{{- end }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -54,6 +58,10 @@ spec:
             value: "standalone"
           - name: SPRING_DATASOURCE_PLATFORM
             value: "mysql"
+            {{- if .Values.env.dbHost  }}
+          - name: MYSQL_SERVICE_HOST
+            value: {{ .Values.env.dbHost | quote }}
+            {{- end }}  
           - name: MYSQL_SERVICE_DB_NAME
             valueFrom:
                configMapKeyRef:
@@ -79,11 +87,11 @@ spec:
           volumeMounts:
           - name: datadir
             mountPath: /home/nacos/data
-{{- if not .Values.persistence.enabled  }} 
+      {{- if not .Values.persistence.enabled  }}
       volumes:
       - name: datadir
         emptyDir: {}
-{{- end }}   
+      {{- end }}
 {{- else if eq .Values.global.mode "cluster" }}
           env:
           - name: NACOS_REPLICAS
@@ -99,10 +107,10 @@ spec:
                 fieldPath: metadata.namespace
           - name: PREFER_HOST_MODE
             value: {{ .Values.env.preferhostmode | quote }}
-            {{- if .Values.env.dbHost  }}
+          {{- if .Values.env.dbHost  }}
           - name: MYSQL_SERVICE_HOST
             value: {{ .Values.env.dbHost | quote }}
-            {{- end }}
+          {{- end }}
           - name: MYSQL_SERVICE_DB_NAME
             valueFrom:
               configMapKeyRef:
@@ -132,7 +140,7 @@ spec:
               mountPath: /home/nacos/data
             - name: logdir
               mountPath: /home/nacos/logs
-{{- if not .Values.persistence.enabled  }}
+      {{- if not .Values.persistence.enabled  }}
       volumes:
       - name: plugindir
         emptyDir: {}
@@ -140,9 +148,8 @@ spec:
         emptyDir: {}
       - name: logdir
         emptyDir: {}
-{{- end }}   
-
-{{- end }}   
+      {{- end }}   
+{{- end }}
 {{- if and .Values.persistence.enabled (eq .Values.global.mode "standalone") }}
   volumeClaimTemplates:
   - metadata:

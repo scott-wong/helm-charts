@@ -5,45 +5,45 @@ metadata:
   name: nacos-mysql
   labels:
     component: nacos-mysql
-  {{- if .Values.mysql.annotations }}
+  {{- if .Values.annotations }}
   annotations:
-{{ toYaml .Values.mysql.annotations | indent 4 }}
+    {{ toYaml .Values.annotations | indent 4 }}
   {{- end }}
 spec:
   serviceName: nacos-mysql
   replicas: 1
   selector:
     matchLabels:
-      name: nacos-mysql
+      component: nacos-mysql
   template:
     metadata:
       labels:
-        name: nacos-mysql
+        component: nacos-mysql
     spec:
       containers:
         - name: nacos-mysql
-          image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
-          imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: mysql
               containerPort: 3306
               protocol: TCP
           volumeMounts:
-          {{- if .Values.master.persistence.existingClaim }}
-          - name: {{ .Values.master.persistence.existingClaim }}
+          {{- if .Values.persistence.existingClaim }}
+          - name: {{ .Values.persistence.existingClaim }}
           {{- else }}
-          - name: {{ .Values.mysql.persistence.claim.name }}
+          - name: {{ .Values.persistence.claim.name }}
           {{- end }}
             mountPath: /var/lib/mysql
           env:
           - name: MYSQL_ROOT_PASSWORD
-            value: {{ .Values.mysql.rootPassword | quote }}
+            value: {{ .Values.rootPassword | quote }}
           - name: MYSQL_DATABASE
-            value: {{ .Values.mysql.database | quote }}
+            value: {{ .Values.database | quote }}
           - name: MYSQL_USER
-            value: {{ .Values.mysql.user | quote }}
+            value: {{ .Values.user | quote }}
           - name: MYSQL_PASSWORD
-            value: {{ .Values.mysql.password | quote }}
+            value: {{ .Values.password | quote }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -59,28 +59,28 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-{{- if not .Values.mysql.persistence.enabled }}
-        - name: {{ .Values.mysql.persistence.claim.name }}
+        {{- if not .Values.persistence.enabled }}
+        - name: {{ .Values.persistence.claim.name }}
           emptyDir: {}
-{{- else if and .Values.mysql.persistence.enabled .Values.mysql.persistence.existingClaim }}
-        - name: {{ .Values.mysql.persistence.existingClaim }}
+        {{- else if and .Values.persistence.enabled .Values.persistence.existingClaim }}
+        - name: {{ .Values.persistence.existingClaim }}
           persistentVolumeClaim:
-            claimName: {{ .Values.mysql.persistence.existingClaim }}
-{{- else if and .Values.master.persistence.enabled (not .Values.master.persistence.existingClaim) }}
+            claimName: {{ .Values.persistence.existingClaim }}
+        {{- end }}       
+  {{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim ) }}
   volumeClaimTemplates:
     - metadata:
-        name: {{ .Values.mysql.persistence.claim.name }}
+        name: {{ .Values.persistence.claim.name }}
         labels:
-          app: {{ template "mysql.name" . }}
           component: nacos-mysql
           release: {{ .Release.Name }}
       spec:
         accessModes:
-        {{- range .Values.mysql.persistence.claim.accessModes }}
+        {{- range .Values.persistence.claim.accessModes }}
           - {{ . | quote }}
         {{- end }}
         resources:
           requests:
-            storage: {{ .Values.mysql.persistence.claim.size | quote }}
-        {{ include "global.storageClass" . }}
+            storage: {{ .Values.persistence.claim.size | quote }}
+  {{- end }}
 {{- end }}

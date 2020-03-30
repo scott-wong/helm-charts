@@ -10,26 +10,25 @@
 #
 #############################mysql###########################
 ############################mysql###########################
-mysql:
-  annotations: {}
-  resources: {}
-  nodeSelector: {}
-  affinity: {}
-  tolerations: {}
-  image:
-    pullPolicy: IfNotPresent
-    repository: nacos/nacos-mysql
-    tag: 8.0.16
-  rootPassword: scott-wong
-  database: nacos_devtest
-  user: nacos
-  password: nacos
-  persistence:
-    enabled: false
-    # existingClaim: 
-    claim:
-      name: nacos-mysql-data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-      size: 5Gi
+annotations: {}
+resources: {}
+nodeSelector: {}
+affinity: {}
+tolerations: {}
+image:
+  pullPolicy: IfNotPresent
+  repository: nacos/nacos-mysql
+  # nacos最新版暂不支持8.0.16
+  tag: 5.7
+rootPassword: scott-wong
+database: nacos_devtest
+user: nacos
+password: nacos
+persistence:
+  enabled: false
+  # existingClaim: 
+  claim:
+    name: nacos-mysql-data
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
