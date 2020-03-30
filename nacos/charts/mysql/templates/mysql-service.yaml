@@ -1,0 +1,15 @@
+{{- if ne .Values.global.mode "quickstart" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: nacos-mysql
+  labels:
+    component: nacos-mysql
+spec:
+  ports:
+    - name: mysql
+      port: 3306
+      protocol: TCP
+  selector:
+    component: nacos-mysql
+{{- end }}

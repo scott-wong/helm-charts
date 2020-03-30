@@ -1,0 +1,35 @@
+## Default values for nacos.
+## This is a YAML-formatted file.
+## Declare variables to be passed into your templates.
+#
+#global:
+#  mode: quickstart
+#  #mode: standalone
+#  #mode: cluster
+#  storageClass:
+#
+#############################mysql###########################
+############################mysql###########################
+mysql:
+  annotations: {}
+  resources: {}
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+  image:
+    pullPolicy: IfNotPresent
+    repository: nacos/nacos-mysql
+    tag: 8.0.16
+  rootPassword: scott-wong
+  database: nacos_devtest
+  user: nacos
+  password: nacos
+  persistence:
+    enabled: false
+    # existingClaim: 
+    claim:
+      name: nacos-mysql-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+      size: 5Gi
