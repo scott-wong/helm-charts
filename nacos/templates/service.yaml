@@ -3,7 +3,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nacos-hs
+  labels: 
+    component: nacos
   annotations:
+    # Unready的Pods信息也会被加入该Service对应的Endpoints中，在Kubernetes 1.13中将被弃用，后续只使用.Spec.PublishNotReadyAddresses Field
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
   clusterIP: None

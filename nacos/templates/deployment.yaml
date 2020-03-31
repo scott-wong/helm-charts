@@ -1,8 +1,11 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "nacos.fullname" . }}
-  labels: 
+  name: {{ template "nacos.fullname" . }}
+  labels:
+    app: {{ template "nacos.name" . }}
+    chart: {{ template "nacos.chart" . }}
+    release: {{ .Release.Name }}
     component: nacos
   annotations: 
   {{- toYaml .Values.annotations | indent 4 }}
@@ -18,10 +21,10 @@ spec:
       component: nacos
   template:
     metadata:
-      labels:
+      labels: {{- include "nacos.labels" . | nindent 8 }}
         component: nacos
-        release: {{ .Release.Name }}
     spec:
+      {{- if ne .Values.global.mode "quickstart" }}
       initContainers:
         - name: check-mysql
           image: busybox:1.31
@@ -34,6 +37,7 @@ spec:
             - mountPath: /home/nacos/plugins/peer-finder
               name: plugindir
         {{- end }}
+      {{- end }}  
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -95,7 +99,7 @@ spec:
 {{- else if eq .Values.global.mode "cluster" }}
           env:
           - name: NACOS_REPLICAS
-            value: {{ .Values.replicaCount }}
+            value: "{{ .Values.replicaCount }}"
           - name: SERVICE_NAME
             value: "nacos-hs"
           - name: DOMAIN_NAME

@@ -4,6 +4,9 @@ kind: StatefulSet
 metadata:
   name: nacos-mysql
   labels:
+    app: {{ template "mysql.name" . }}
+    chart: {{ template "mysql.chart" . }}
+    release: {{ .Release.Name }}
     component: nacos-mysql
   {{- if .Values.annotations }}
   annotations:
@@ -17,7 +20,7 @@ spec:
       component: nacos-mysql
   template:
     metadata:
-      labels:
+      labels: {{- include "mysql.labels" . | nindent 8 }}
         component: nacos-mysql
     spec:
       containers:

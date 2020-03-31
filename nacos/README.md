@@ -61,7 +61,6 @@ The following table lists the configurable parameters of the Skywalking chart an
 | Parameter                             | Description                                                        | Default                             |
 |---------------------------------------|--------------------------------------------------------------------|-------------------------------------|
 | `global.mode`                         | Run Mode (quickstart, standalone, cluster; quickstart: without mysql and pv)   | `quickstart`            |
-| `global.storageClass.provisioner`     | Global storage class provisioner                                   | `nil`                               |
 | `mysql.resources`                     | The [resources] to allocate for mysql container                    | `{}`                                |
 | `mysql.nodeSelector`                  | Mysql labels for mysql                  | `{}`                                |
 | `mysql.affinity`                      | Mysql affinity policy                                              | `{}`                                |
@@ -70,18 +69,15 @@ The following table lists the configurable parameters of the Skywalking chart an
 | `mysql.annotations`            | Mysql  annotations                                           | `{}`                                |
 | `mysql.image.repository`       | Mysql  container image name                                  | `nacos/nacos-mysql`          |
 | `mysql.image.tag`              | Mysql  container image tag                                   | `5.7`                            |
-| `mysql.rootPassword`           | Mysql  root password                                         | `root`                              |
+| `mysql.rootPassword`           | Mysql  root password                                         | `scott-wong`                              |
 | `mysql.database`               | Nacos database name                                                | `nacos_devtest`                     |
 | `mysql.user`                   | Nacos database user                                                | `nacos`                             |
 | `mysql.password`               | Nacos database password                                            | `nacos`                             |
-| `mysql.classParameters`        | Mysql  storageclass parameters                               | `{}`                                |
 | `mysql.persistence.enabled`    | Enable the  data persistence or not                    | `false`                             |
-| `mysql.persistence.existingClaim`|Use the existing PVC which must be created manually before bound, and specify the `subPath` if the PVC is shared with other components                                        | `mysql-data`        |
-| `mysql.persistence.claim.name`      | Mysql  pvc name                                         | `mysql-data`                 |
-| `mysql.persistence.claim.spec.accessModes` | Mysql  pvc access mode                           | `ReadWriteOnce`                     |
-| `mysql.persistence.claim.spec.resources.requests.storage`  | Mysql  pvc requests storage      | `5G`                                |
-| `mysql.persistence.claim.spec.storageClassName`|  Mysql  pvc storage class name               | `sc-mysql`                   |
-| `mysql.service.port`           | Mysql  service port                                          | `3306`                              |
+| `mysql.persistence.existingClaim`|Use the existing PVC which must be created manually before bound, and specify the `subPath` if the PVC is shared with other components                                        | `nil`        |
+| `mysql.persistence.claim.name`      | Mysql  pvc name                                         | `nacos-mysql-data`                 |
+| `mysql.persistence.claim.accessModes` | Mysql  pvc access mode                           | `ReadWriteOnce`                     |
+| `mysql.persistence.claim.size`        | Mysql  pvc requests storage      | `5G`                                |
 | `resources`                          | The [resources] to allocate for nacos container                    | `{}`                                |
 | `nodeSelector`                       | Nacos labels for pod assignment                   | `{}`                                |
 | `affinity`                           | Nacos affinity policy                                              | `{}`                                |
@@ -90,22 +86,19 @@ The following table lists the configurable parameters of the Skywalking chart an
 | `resources.requests.memory`|nacos requests memory resource|`2G`|
 | `replicaCount`                        | Number of desired nacos pods, the number should be 1 as run quickstart or standalone mode| `1`           |
 | `image.repository`                    | Nacos container image name                                      | `nacos/nacos-server`                   |
-| `image.tag`                           | Nacos container image tag                                       | `0.9.0`                                |
-| `image.pullPolicy`                    | Nacos container image pull policy                                | `IfNotPresent`                        |
+| `image.tag`                           | Nacos container image tag                                       | `latest`                                |
+| `image.pullPolicy`                    | Nacos container image pull policy                                | `IfNotPresent`                         |
 | `health.enabled`                      | Enable health check or not                                         | `false`                              |
-| `env.preferhostmode`                  | Enable Nacos cluster node domain name support                      | `hostname`                         |
+| `env.preferhostmode`                  | Enable Nacos cluster node domain name support                      | `hostname`                           |
 | `env.serverPort`                      | Nacos port                                                         | `8848`                               |
+| `env.dbHost`                          | Nacos MySQL service name                                           | `nacos-mysql`                        |
 | `persistence.enabled`                 | Enable the nacos data persistence or not                           | `false`                              |
-| `persistence.storageClassName`        | Nacos storage class name                                           | `sc-nacos`                   |
-| `persistence.classParameters`                     | Nacos storageclass parameters                                      | `{}`
-| `persistence.data.accessModes` | Nacos data pvc access mode                           | `ReadWriteOnce`                     |
-| `persistence.data.storageClassName`  | Nacos data pvc storage class name      | `sc-nacos`                                |
-| `persistence.data.resources.requests.storage` | Nacos data pvc requests storage             | `5G`                   |
-| `persistence.plugin.accessModes` | Nacos plugin pvc access mode (Available as cluster mode)                       | `ReadWriteOnce`                     |
-| `persistence.plugin.storageClassName`  | Nacos plugin pvc storage class name (Available as cluster mode)      | `sc-nacos`                                |
-| `persistence.plugin.resources.requests.storage` | Nacos plugin pvc requests storage (Available as cluster mode)             | `5G`                   |
-| `persistence.log.accessModes` | Nacos log pvc access mode (Available as cluster mode)                           | `ReadWriteOnce`                     |
-| `persistence.log.storageClassName`  | Nacos log pvc storage class name (Available as cluster mode)      | `sc-nacos`                                |
+| `persistence.classParameters`         | Nacos storageclass parameters                                      | `{}`                                 |
+| `persistence.data.accessModes` | Nacos data pvc access mode                                                | `ReadWriteOnce`                      |
+| `persistence.data.resources.requests.storage` | Nacos data pvc requests storage                            | `2G`                                 |
+| `persistence.plugin.accessModes` | Nacos plugin pvc access mode (Available as cluster mode)                       | `ReadWriteOnce`               |
+| `persistence.plugin.resources.requests.storage` | Nacos plugin pvc requests storage (Available as cluster mode)             | `1G`                |
+| `persistence.log.accessModes` | Nacos log pvc access mode (Available as cluster mode)                           | `ReadWriteOnce`                 |
 | `persistence.log.resources.requests.storage` | Nacos log pvc requests storage (Available as cluster mode)| `5G`          |
 | `service.type` | service type | `NodePort` |
 | `service.port` | service port | `8848` |

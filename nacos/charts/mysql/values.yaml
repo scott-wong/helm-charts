@@ -6,7 +6,6 @@
 #  mode: quickstart
 #  #mode: standalone
 #  #mode: cluster
-#  storageClass:
 #
 #############################mysql###########################
 ############################mysql###########################
@@ -18,7 +17,7 @@ tolerations: {}
 image:
   pullPolicy: IfNotPresent
   repository: nacos/nacos-mysql
-  # nacos最新版暂不支持8.0.16
+  # nacos 1.2.0暂不支持nacos-mysql 8.0.16
   tag: 5.7
 rootPassword: scott-wong
 database: nacos_devtest

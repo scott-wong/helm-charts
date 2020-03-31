@@ -3,14 +3,13 @@
 # Declare variables to be passed into your templates.
 
 global:
-  # mode: quickstart
-  mode: standalone
-  #mode: cluster
-  #storageClass:
+  mode: quickstart
+  # mode: standalone
+  # mode: cluster
 
 ############################ mysql ###########################
 # 覆盖子Chart配置要名称与子Chart匹配
-mysql: 
+mysql:
   annotations: {}
   resources: {}
   nodeSelector: {}
@@ -19,6 +18,7 @@ mysql:
   image:
     pullPolicy: IfNotPresent
     repository: nacos/nacos-mysql
+    # nacos 1.2.0暂不支持nacos-mysql 8.0.16
     tag: 5.7
   rootPassword: scott-wong
   database: nacos_devtest
@@ -51,30 +51,27 @@ env:
   domainName: cluster.local
   preferhostmode: hostname
   serverPort: 8848
+  # mysql service name
   dbHost: nacos-mysql
 
 persistence:
   enabled: false
-  storageClassName: sc-nacos
   classParameters: {}
   data:
     accessModes:
       - ReadWriteOnce
-    storageClassName: manual
     resources:
       requests:
-        storage: 5Gi
+        storage: 2Gi
   plugin:
     accessModes:
       - ReadWriteOnce
-    storageClassName: manual
     resources:
       requests:
-        storage: 5Gi
+        storage: 1Gi
   log:
     accessModes:
       - ReadWriteOnce
-    storageClassName: manual
     resources:
       requests:
         storage: 5Gi
