@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cmak.fullname" . }}
+  labels: {{- include "cmak.labels" . | nindent 4 }}
+data:
+  ZK_HOSTS: {{ .Values.ZK_HOSTS }}

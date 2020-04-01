@@ -26,7 +26,7 @@ metadata:
   labels: 
     component: nacos
   annotations: 
-{{- toYaml .Values.service.annotations | nindent 4 }}
+    {{- toYaml .Values.service.annotations | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
