@@ -1,7 +1,7 @@
-##cmak
+# cmak
 CMAK (previously known as Kafka Manager) is a tool for managing Apache Kafka clusters. See below for details about the name change.
-======
-###CMAK supports the following:
+---
+### CMAK supports the following:
 
 - Manage multiple clusters
 - Easy inspection of cluster state (topics, consumers, offsets, brokers, replica distribution, partition distribution)

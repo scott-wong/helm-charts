@@ -3,9 +3,9 @@ entries:
   cmak:
   - apiVersion: v2
     appVersion: 3.0.0.4
-    created: "2020-04-01T17:25:14.4565953+08:00"
+    created: "2020-04-01T17:46:04.5708242+08:00"
     description: A Helm chart for CMAK
-    digest: 1fe3dfc3b592a88f445cc65aeee82a48b2145ff6ee1ed75a4371b4d86e4c4e16
+    digest: 8cd619ea8f8c8aec9afe481d1401cee6c43f8ad6d12707996bf97417661dceac
     home: https://github.com/scott-wong/helm-charts/cmak
     keywords:
     - kafka
@@ -13,36 +13,18 @@ entries:
     name: cmak
     type: application
     urls:
-    - https://scott-wong.github.io/charts/cmak-0.1.2.tgz
-    version: 0.1.2
+    - https://scott-wong.github.io/charts/cmak-0.1.0.tgz
+    version: 0.1.0
   nacos:
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2020-04-01T17:25:14.4585945+08:00"
+    created: "2020-04-01T17:46:04.5818171+08:00"
     description: A Nacos Helm chart for Kubernetes
-    digest: 48d5fcf58fb9c7ed39c4b904cbd131029f71651681be523f27a23def4e96b5c2
+    digest: 75c6ec82ddbe94569dfb3b2b2d90ae4f62884fbbcd5de6bb25c739a9795843b2
     home: https://github.com/scott-wong/helm-charts/nacos
     icon: https://scott-wong.github.io/charts/icons/nacos_colorful.png
     keywords:
-    - kafka
-    - cmak
-    maintainers:
-    - name: scott-wong
-    name: nacos
-    type: application
-    urls:
-    - https://scott-wong.github.io/charts/nacos-0.1.1.tgz
-    version: 0.1.1
-  - apiVersion: v2
-    appVersion: 1.2.0
-    created: "2020-04-01T17:25:14.4575972+08:00"
-    description: A Nacos Helm chart for Kubernetes
-    digest: e8ff1618737b09c2dfb01e39f7d47948289569efdc5f4bf3ef7464acc02892f0
-    home: https://github.com/scott-wong/helm-charts/nacos
-    icon: https://scott-wong.github.io/charts/icons/nacos_colorful.png
-    keywords:
-    - kafka
-    - cmak
+    - nacos
     maintainers:
     - name: scott-wong
     name: nacos
@@ -50,4 +32,4 @@ entries:
     urls:
     - https://scott-wong.github.io/charts/nacos-0.1.0.tgz
     version: 0.1.0
-generated: "2020-04-01T17:25:14.4555958+08:00"
+generated: "2020-04-01T17:46:04.5698248+08:00"
