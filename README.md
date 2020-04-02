@@ -14,3 +14,8 @@ Find the repository you want to use under / directory and enter below command:
 helm repo add scott-wong https://scott-wong.kubesphere.io/charts
 helm search repo scott-wong
 ```
+
+
+## Skipping a travis-ci build
+Commit msg like this:  
+[skip ci] Update README
