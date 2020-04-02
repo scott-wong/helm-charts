@@ -18,4 +18,7 @@ helm search repo scott-wong
 
 ## Skipping a travis-ci build
 Commit msg like this:  
-[skip ci] Update README
+```
+[skip ci] Update README  
+```
+related to [docs.travis-ci.com](https://docs.travis-ci.com/user/customizing-the-build/#Skipping-a-build)
