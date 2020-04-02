@@ -2,7 +2,7 @@
 # helm charts list
 ## cmak
 Helm chart for [yahoo/CMAK](https://github.com/yahoo/CMAK) ,Cluster Manager for Apache Kafka, previously known as Kafka Manager.  
-Please look at [nacos/README](cmak/README.md).
+Please look at [cmak/README](cmak/README.md).
 
 ## nacos
 Helm chart for [nacos](https://github.com/nacos-group/nacos-docker).  
