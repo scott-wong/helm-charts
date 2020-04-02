@@ -15,7 +15,7 @@ install:
   - helm version
   - git log -p -2 | cat
   - commit_msg=$(git log -n1 --pretty=format:"%s")
-  - git clone --recursive -b master https://${GH_APIKEY}@github.com/scott-wong/scott-wong.github.io.git public
+  - git clone --recursive -b master https://${GH_APIKEY}@github.com/scott-wong/scott-wong.github.io.git ../public
   # - rm -rf public/*
 
 script:
@@ -23,9 +23,9 @@ script:
   - ls -F|grep "/$" | xargs -t -L 1 helm package
   # 添加描述性文件
   - helm repo index --url https://scott-wong.github.io/charts .
-  - cp *.tgz public/charts/
-  - cp index.yaml public/charts
-  - pushd public
+  - cp *.tgz ../public/charts/
+  - cp index.yaml ../public/charts
+  - pushd ../public
   - git add .
   - git commit -m "auto depoly ${commit_msg} "
   - git push
