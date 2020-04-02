@@ -1,0 +1,32 @@
+language: go
+
+branches:
+  only:
+    - master  # 设置自动化部署的源码分支
+
+before_install:
+- export TZ='Asia/Shanghai'  # 设置时区
+
+# 安装依赖组件
+install:
+  - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+  - chmod 700 get_helm.sh
+  - ./get_helm.sh
+  - helm version
+  - git log -p -2 | cat
+  - commit_msg=$(git log -n1 --pretty=format:"%s")
+  - git clone --recursive -b master https://${GH_APIKEY}@github.com/scott-wong/scott-wong.github.io.git public
+  # - rm -rf public/*
+
+script:
+  - ls -F|grep "/$" | xargs -t helm lint --strict
+  - ls -F|grep "/$" | xargs -t -L 1 helm package
+  # 添加描述性文件
+  - helm repo index --url https://scott-wong.github.io/charts .
+  - cp *.tgz public/charts/
+  - cp index.yaml public/charts
+  - pushd public
+  - git add .
+  - git commit -m "auto depoly ${commit_msg} "
+  - git push
+  - echo "depoly done"
