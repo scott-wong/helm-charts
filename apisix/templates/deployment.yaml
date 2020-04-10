@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "apisix.fullname" . }}
+  labels:
+    {{- include "apisix.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "apisix.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "apisix.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ include "apisix.fullname" . }}
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      initContainers:
+      - command:
+        - /bin/sh
+        - -c
+        - |
+          sysctl -w net.core.somaxconn=65535
+          sysctl -w net.ipv4.ip_local_port_range="1024 65535"
+          sysctl -w net.ipv4.tcp_max_syn_backlog=8192
+          sysctl -w fs.file-max=1048576
+          sysctl -w fs.inotify.max_user_instances=16384
+          sysctl -w fs.inotify.max_user_watches=524288
+          sysctl -w fs.inotify.max_queued_events=16384
+        image: busybox:latest
+        name: init-sysctl
+        resources: {}
+        securityContext:
+          privileged: true
+          procMount: Default
+      restartPolicy: Always
+      containers:
+        - env:
+            - name: TZ
+              value: "Asia/Shanghai"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Chart.Name }}
+          ports:
+          - containerPort: 9080
+            name: http
+            protocol: TCP
+          - containerPort: 9443
+            name: https
+            protocol: TCP
+          # livenessProbe:
+          #   failureThreshold: 3
+          #   httpGet:
+          #     path: /healthz
+          #     port: 10254
+          #     scheme: HTTP
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 10
+          #   successThreshold: 1
+          #   timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 9080
+            timeoutSeconds: 1
+          lifecycle:
+            # For alpine based image
+            # https://k8s.imroc.io/troubleshooting/cases/dns-lookup-5s-delay
+            # postStart:
+            #   exec:
+            #     command:
+            #     - /bin/sh
+            #     - -c
+            #     - "/bin/echo 'options single-request-reopen' >> /etc/resolv.conf"
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - "sleep 30"
+          # cpu core(s), 1 == 1000m
+          resources:
+            limits:
+              cpu: '2'
+            requests:
+              cpu: '50m'
+          volumeMounts:
+            - mountPath: /usr/local/apisix/conf/config.yaml
+              name: {{ include "apisix.fullname" . }}-cm
+              subPath: config.yaml
+            - mountPath: /etc/localtime
+              name: localtime
+              readOnly: true
+      volumes:
+        - configMap:
+            name: {{ include "apisix.fullname" . }}-cm
+          name: {{ include "apisix.fullname" . }}-cm
+        - hostPath:
+            path: /etc/localtime
+            type: File
+          name: localtime
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

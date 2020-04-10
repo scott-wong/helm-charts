@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/scott-wong/helm-charts.svg?branch=master)](https://travis-ci.org/scott-wong/helm-charts)  
 # helm charts list
+
+## Apache Apisix
+Helm chart for [Apache Apisix](https://github.com/apache/incubator-apisix), a Cloud-Native Microservices API Gateway.
+
 ## cmak
 Helm chart for [yahoo/CMAK](https://github.com/yahoo/CMAK) ,Cluster Manager for Apache Kafka, previously known as Kafka Manager.  
 Please look at [cmak/README](cmak/README.md).
@@ -8,10 +12,12 @@ Please look at [cmak/README](cmak/README.md).
 Helm chart for [nacos](https://github.com/nacos-group/nacos-docker).  
 Please look at [nacos/README](nacos/README.md).
 
+
+
 ## How to install these charts
 Find the repository you want to use under / directory and enter below command:
 ```
-helm repo add scott-wong https://scott-wong.kubesphere.io/charts
+helm repo add scott-wong https://scott-wong.github.io/charts
 helm search repo scott-wong
 ```
 
