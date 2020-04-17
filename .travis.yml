@@ -19,7 +19,8 @@ install:
   # - rm -rf public/*
 
 script:
-  - ls -F|grep "/$" | xargs -t helm lint --strict
+  # - ls -F|grep "/$" | xargs -t helm lint --strict
+  - ls -F|grep "/$" | xargs -t helm lint
   - ls -F|grep "/$" | xargs -t -L 1 helm package
   # 添加描述性文件
   - helm repo index --url https://scott-wong.github.io/charts .

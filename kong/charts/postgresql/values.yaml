@@ -9,6 +9,9 @@ global:
 #     - myRegistryKeySecretName
 #   storageClass: myStorageClass
 
+nameOverride: ""
+fullnameOverride: ""
+
 ## Bitnami PostgreSQL image version
 ## ref: https://hub.docker.com/r/bitnami/postgresql/tags/
 ##
@@ -237,10 +240,12 @@ ldap:
 
 ## PostgreSQL service configuration
 service:
-  ## PosgresSQL service type
+  ## PosgresSQL service type ClusterIP or LoadBalancer
   type: ClusterIP
   # clusterIP: None
   port: 5432
+  # loadBalancerIP: ""
+  # loadBalancerSourceRanges: {}
 
   ## Specify the nodePort value for the LoadBalancer and NodePort service types.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
