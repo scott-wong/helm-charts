@@ -13,8 +13,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 ###################### Change here!!!!! ####################
-# Used for nginx dns resolution
-coredns: 10.233.0.3
+
 etcd:
   # use full service name
   host: http://etcd-apisix.cargo-dev.svc.cluster.local:2379
