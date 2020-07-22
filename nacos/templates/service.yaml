@@ -1,14 +1,13 @@
-{{- if and (eq .Values.global.mode "cluster") }}
+{{- if eq .Values.global.mode "cluster" }}
 apiVersion: v1
 kind: Service
 metadata:
   name: nacos-hs
   labels: 
     component: nacos
-  annotations:
-    # Unready的Pods信息也会被加入该Service对应的Endpoints中，在Kubernetes 1.13中将被弃用，后续只使用.Spec.PublishNotReadyAddresses Field
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
+  # 由于使用DNS访问Pod需Pod和Headless service启动之后才能访问，publishNotReadyAddresses设置成true，防止readinessProbe在服务没启动时找不到DNS
+  publishNotReadyAddresses: true
   clusterIP: None
   ports:
     - port: {{ .Values.service.port }}

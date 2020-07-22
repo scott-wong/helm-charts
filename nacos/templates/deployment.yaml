@@ -26,9 +26,11 @@ spec:
     spec:
       {{- if ne .Values.global.mode "quickstart" }}
       initContainers:
+        {{- if .Values.env.dbHost }}
         - name: check-mysql
           image: busybox:1.31
           command: ['sh', '-c', 'until nslookup {{ .Values.env.dbHost }}; do echo waiting for mysql; sleep 2; done; echo waiting for initing mysql data; sleep 45;']
+        {{- end }}
         {{- if eq .Values.global.mode "cluster" }}
         - name: peer-finder-plugin-install
           image: nacos/nacos-peer-finder-plugin:1.0
@@ -112,9 +114,10 @@ spec:
           - name: PREFER_HOST_MODE
             value: {{ .Values.env.preferhostmode | quote }}
           {{- if .Values.env.dbHost  }}
+          - name: SPRING_DATASOURCE_PLATFORM
+            value: "mysql"
           - name: MYSQL_SERVICE_HOST
             value: {{ .Values.env.dbHost | quote }}
-          {{- end }}
           - name: MYSQL_SERVICE_DB_NAME
             valueFrom:
               configMapKeyRef:
@@ -135,6 +138,10 @@ spec:
               configMapKeyRef:
                  name: nacos-cm
                  key: mysql.password
+          {{- else }}
+          - name: EMBEDDED_STORAGE
+            value: "embedded"
+          {{- end }}
           - name: NACOS_SERVER_PORT
             value: {{ .Values.env.serverPort | quote }}
           volumeMounts:

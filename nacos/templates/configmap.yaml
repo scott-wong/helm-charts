@@ -6,7 +6,7 @@ metadata:
 data:
   {{- with .Values.mysql }}
   mysql.db.name: {{ .database }}
-  mysql.port: "3306"
+  mysql.port: "{{ .databasePort }}"
   mysql.user: {{ .user }}
   mysql.password: {{ .password }}
   {{- end }}
