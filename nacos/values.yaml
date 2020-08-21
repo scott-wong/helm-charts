@@ -4,8 +4,8 @@
 
 global:
   # mode: quickstart
-  # mode: standalone
-  mode: cluster
+  mode: standalone
+  # mode: cluster
 
 ############################ mysql ###########################
 # 覆盖子Chart配置要名称与子Chart匹配
@@ -22,9 +22,9 @@ mysql:
     repository: nacos/nacos-mysql
     # nacos 1.2.0暂不支持nacos-mysql 8.0.16
     tag: 5.7
-  rootPassword: scott-wong
-  database: nacos_devtest
-  databasePort: 3306
+  rootPassword: tidb#123
+  database: nacos_test
+  databasePort: 4000
   user: nacos
   password: nacos
   persistence:
@@ -42,10 +42,10 @@ mysql:
 nameOverride: ""
 fullnameOverride: ""
 
-replicaCount: 3
+replicaCount: 1
 image:
   repository: nacos/nacos-server
-  tag: 1.3.1
+  tag: 1.3.2
   pullPolicy: IfNotPresent
 
 # TODO health check
@@ -58,6 +58,7 @@ env:
   serverPort: 8848
   # mysql service name，注释则不依赖外部数据库采用embedded模式
   # dbHost: nacos-mysql
+  dbHost: basic-tidb.pingcap
 
 persistence:
   enabled: true

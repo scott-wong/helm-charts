@@ -17,7 +17,7 @@ Please look at [nacos/README](nacos/README.md).
 ## How to install these charts
 Find the repository you want to use under / directory and enter below command:
 ```
-helm repo add scott-wong https://scott-wong.github.io/charts
+helm repo add scott-wong https://scott-wong.ga/charts
 helm search repo scott-wong
 ```
 
